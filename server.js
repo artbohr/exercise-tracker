@@ -61,7 +61,11 @@ app.post('/api/exercise/new-user', (req, res) =>{
 
 // route for appending exercises
 
+
 // route for finding a user by id
+app.get("/api/user/:id", (req, res) => {
+  User.findOne({_id: req.params.id}).then(doc=>res.send(doc))
+});
 
 // get all users
 app.get('/api/exercise/users', (req, res) => {
