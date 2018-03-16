@@ -23,7 +23,10 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  exercises: []
+  exercises: [{
+    description : String,
+    duration : String
+     }]
 });
 
 const User = mongoose.model("User", userSchema);
@@ -55,23 +58,23 @@ app.post('/api/exercise/new-user', (req, res) =>{
 
   res.send({"username": userForm.username, "_id" : userForm._id})
 });
-/*
+
 // route for appending exercises
 app.post('/api/exercise/add', (req, res) =>{
   const description = req.body.description
-  const duration = parseInt(req.body.duration)
-  const data = {description : duration};
+  const duration = req.body.duration
 
   User.findByIdAndUpdate(
-    req.body.id ,
-    {$push: {"exercises": {description: description, duration: duration}}},
-
+        req.body.userId,
+        {$push: {"exercises": {description: description, duration: duration}}},
+        {safe: true, upsert: true, new : true},
         function(err, model) {
-            console.log(err);
+          console.log(err);
+          res.send(model);
         }
     );
 });
-*/
+
 // route for finding a user by id
 app.get("/api/user/:id", (req, res) => {
   User.findOne({_id: req.params.id}).then(doc=>res.send(doc))
